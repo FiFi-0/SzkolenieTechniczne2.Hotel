@@ -1,0 +1,165 @@
+﻿/* Layout podstawowy */
+.layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Nawigacja */
+.navbar {
+    height: 60px;
+    background-color: #1e3d59;
+    color: #fff;
+}
+
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+/* Sidebar (zawsze widoczny) */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #1e3d59;
+    color: white;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+    .sidebar h4 {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        color: #fff;
+    }
+
+    .sidebar a {
+        color: #fff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .sidebar .nav-link {
+        display: block;
+        padding: 0.5rem 0;
+        color: #333;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .sidebar .nav-link:hover {
+            text-decoration: underline;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+/* Dodaj w hotel-style.css lub dopilnuj, że istnieje */
+.content {
+    margin-left: 220px; /* dokładnie tyle co sidebar */
+    padding: 1.5rem;
+    background-color: #fff;
+    flex-grow: 1;
+    min-height: 100vh;
+    overflow-x: auto;
+}
+
+
+/* Sticky sidebar (backup responsywności) */
+aside.sidebar {
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        padding: 1rem;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+}
+
+/* QuickGrid (stylowane tabele) */
+.quickgrid th button {
+    all: unset;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quickgrid th svg {
+    width: 14px;
+    height: 14px;
+    fill: #666;
+}
+
+.quickgrid th,
+.quickgrid td {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.quickgrid {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+/* Przycisk główny */
+.btn-primary {
+    background-color: #1e3d59;
+    border-color: #1e3d59;
+}
+
+    .btn-primary:hover {
+        background-color: #163045;
+        border-color: #163045;
+    }
+
+/* Formularze */
+input, select {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+}
+
+/* Alert sukcesu */
+.alert-success {
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+    color: #0f5132;
+    padding: 0.75rem;
+    border-radius: 4px;
+}

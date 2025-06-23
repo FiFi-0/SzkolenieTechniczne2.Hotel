@@ -1,0 +1,78 @@
+﻿@page "/reservations"
+
+@using MediatR
+@using SzkolenieTechniczne2.Hotel.Domain.Entities
+@using SzkolenieTechniczne2.Hotel.Domain.Query.Reservation
+@inject IMediator MediatorService
+
+<h3>Lista rezerwacji</h3>
+
+@if (!string.IsNullOrEmpty(sukces))
+{
+    <div class="alert alert-success">✅ @sukces</div>
+}
+@if (!string.IsNullOrEmpty(blad))
+{
+    <div class="alert alert-danger">❌ @blad</div>
+}
+
+@if (rezerwacje is null)
+{
+    <p>🔄 Wczytywanie...</p>
+}
+else if (!rezerwacje.Any())
+{
+    <p>Brak rezerwacji.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Klient</th>
+                <th>Pokój</th>
+                <th>Od</th>
+                <th>Do</th>
+                <th>Cena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in rezerwacje)
+            {
+                <tr>
+                    <td>@r.Client?.Name</td>
+                    <td>@r.Room?.Number</td>
+                    <td>@r.From.ToShortDateString()</td>
+                    <td>@r.To.ToShortDateString()</td>
+                    <td>@($"{r.Price:F2} zł")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Reservation>? rezerwacje;
+    private string? sukces;
+    private string? blad;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("🟢 Reservations: OnInitializedAsync");
+        await Wczytaj();
+    }
+
+    private async Task Wczytaj()
+    {
+        Console.WriteLine("🔄 Wczytywanie rezerwacji...");
+        try
+        {
+            rezerwacje = await MediatorService.Send(new GetAllReservationsQuery());
+            Console.WriteLine($"✅ Załadowano {rezerwacje?.Count ?? 0} rezerwacji.");
+        }
+        catch (Exception ex)
+        {
+            blad = $"❌ Błąd: {ex.Message}";
+        }
+    }
+}

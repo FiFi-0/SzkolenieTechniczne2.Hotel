@@ -1,0 +1,118 @@
+﻿@page "/create-reservation"
+@page "/reservations/create"
+
+@using MediatR
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.EntityFrameworkCore
+@inject IMediator Mediator
+@inject SzkolenieTechniczne2.Hotel.Infrastructure.HotelDbContext Db
+@inject IJSRuntime JSRuntime
+
+@using Microsoft.JSInterop
+@using SzkolenieTechniczne2.Hotel.Domain.Command.Reservation
+@using SzkolenieTechniczne2.Hotel.Domain.Entities
+
+<h3>Dodaj rezerwację</h3>
+
+@if (!string.IsNullOrEmpty(Sukces))
+{
+    <div class="alert alert-success">✅ @Sukces</div>
+}
+@if (!string.IsNullOrEmpty(Blad))
+{
+    <div class="alert alert-danger">❌ @Blad</div>
+}
+
+<EditForm Model="this" OnValidSubmit="HandleSubmit">
+    <div class="mb-3">
+        <label>Klient:</label>
+        <InputSelect class="form-control" @bind-Value="ClientId">
+            @foreach (var klient in Klienci)
+            {
+                <option value="@klient.Id">@klient.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label>Pokój:</label>
+        <InputSelect class="form-control" @bind-Value="RoomId">
+            @foreach (var pokoj in Pokoje)
+            {
+                <option value="@pokoj.Id">Pokój @pokoj.Number</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label>Data rozpoczęcia:</label>
+        <InputDate class="form-control" @bind-Value="From" />
+    </div>
+    <div class="mb-3">
+        <label>Data zakończenia:</label>
+        <InputDate class="form-control" @bind-Value="To" />
+    </div>
+    <button type="submit" class="btn btn-primary">Rezerwuj</button>
+</EditForm>
+
+@code {
+    public long ClientId { get; set; }
+    public long RoomId { get; set; }
+    public DateTime From { get; set; } = DateTime.Today;
+    public DateTime To { get; set; } = DateTime.Today.AddDays(1);
+
+    public string? Sukces { get; set; }
+    public string? Blad { get; set; }
+
+    private List<Client> Klienci = new();
+    private List<Room> Pokoje = new();
+
+    private const decimal CenaZaDobe = 250m;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Klienci = await Db.Clients.ToListAsync();
+        Pokoje = await Db.Rooms.Where(r => r.IsAvailable).ToListAsync();
+
+        if (Klienci.Any())
+            ClientId = Klienci.First().Id;
+        if (Pokoje.Any())
+            RoomId = Pokoje.First().Id;
+    }
+
+    private async Task HandleSubmit()
+    {
+        var command = new CreateReservationCommand((int)ClientId, (int)RoomId, From, To);
+        var result = await Mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            Sukces = "Dodano rezerwację.";
+            Blad = null;
+
+            var klient = Klienci.FirstOrDefault(k => k.Id == ClientId);
+            var pokoj = Pokoje.FirstOrDefault(p => p.Id == RoomId);
+
+            var imię = klient?.Name ?? "Klient";
+            var numerPokoju = pokoj?.Number ?? "brak danych";
+            var dataOd = From.ToString("yyyy-MM-dd");
+            var dataDo = To.ToString("yyyy-MM-dd");
+
+            var liczbaDni = Math.Max(1, (To - From).Days);
+            var cena = CenaZaDobe * liczbaDni;
+
+            var wiadomość = $"Szanowny/a {imię},\n\n" +
+                            $"Dziękujemy za dokonanie rezerwacji.\n\n" +
+                            $"➡️ Pokój: {numerPokoju}\n" +
+                            $"📅 Od: {dataOd}\n" +
+                            $"📅 Do: {dataDo}\n" +
+                            $"💵 Cena: {cena} zł\n\n" +
+                            $"Zespół Hotelu";
+
+            await JSRuntime.InvokeVoidAsync("alert", wiadomość);
+        }
+        else
+        {
+            Blad = "Błąd: Nie udało się dodać rezerwacji.";
+            Sukces = null;
+        }
+    }
+}

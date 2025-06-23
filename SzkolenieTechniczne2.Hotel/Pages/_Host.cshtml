@@ -1,0 +1,29 @@
+﻿@page "/"
+@namespace SzkolenieTechniczne2.Hotel.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using SzkolenieTechniczne2.Hotel.Shared
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HotelApp</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/hotel-style.css" />
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
