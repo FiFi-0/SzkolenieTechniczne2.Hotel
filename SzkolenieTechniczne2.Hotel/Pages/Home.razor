@@ -1,9 +1,20 @@
 @page "/"
+@using SzkolenieTechniczne2.Hotel.Components.Layout
+@layout HeroLayout
 
-<h1>Witaj w HotelApp!</h1>
-<p>System rezerwacji pokoi hotelowych.</p>
+@inject NavigationManager NavigationManager
 
-<ul>
-    <li><a href="/create-reservation">Dodaj rezerwacjê</a></li>
-    <li><a href="/reservations">Zobacz wszystkie rezerwacje</a></li>
-</ul>
+<div class="hero-section">
+    <div class="hero-content text-center text-white">
+        <h1 class="display-3 fw-bold">Luksus i Komfort w Twoim Zasiêgu</h1>
+        <p class="lead mt-3">
+            Odkryj nasz hotel, gdzie nowoczesny design spotyka siê z niezrównan¹ goœcinnoœci¹.
+            Zarezerwuj swój pobyt i doœwiadcz wyj¹tkowych chwil.
+        </p>
+
+        <a href="/reservations" class="btn btn-primary btn-lg mt-4" role="button">
+            Zobacz Dostêpne Rezerwacje
+        </a>
+
+    </div>
+</div>

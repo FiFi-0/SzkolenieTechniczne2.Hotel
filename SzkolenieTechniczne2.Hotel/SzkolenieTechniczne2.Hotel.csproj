@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Include="wwwroot\hero-page-background.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\SzkolenieTechniczne2.Hotel.Domain\SzkolenieTechniczne2.Hotel.Domain.csproj" />
 		<ProjectReference Include="..\SzkolenieTechniczne2.Hotel.Infrastructure\SzkolenieTechniczne2.Hotel.Infrastructure.csproj" />
 	</ItemGroup>

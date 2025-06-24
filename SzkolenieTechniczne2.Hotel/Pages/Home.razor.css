@@ -1,0 +1,39 @@
+﻿.hero-section {
+    /* Ustawienie zdjecia w tle z jaśniejszą nakładką */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/hero-page-background.jpg');
+    background-size: cover;
+    background-position: center;
+    /* Ustawiamy wysokość na 100% wysokości okna przeglądarki */
+    height: 100vh;
+    /* Centrowanie zawartości - bez zmian */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    padding: 2rem;
+    }
+
+    .hero-content h1 {
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-content .btn-primary {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        transition: transform 0.2s;
+        position: relative; 
+        z-index: 2;
+    }
+
+        .hero-content .btn-primary:hover {
+            transform: scale(1.05);
+        }

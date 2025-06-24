@@ -1,0 +1,70 @@
+﻿@page "/rooms/edit/{RoomId:long}"
+@using MediatR
+@using SzkolenieTechniczne2.Hotel.Domain.Command.Room.Update
+@using SzkolenieTechniczne2.Hotel.Domain.Query.Room.GetById
+@using Microsoft.AspNetCore.Components.Forms
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+
+<h3>Edytuj pokój</h3>
+
+@if (Model == null)
+{
+    <p><em>Ładowanie...</em></p>
+}
+else
+{
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="number" class="form-label">Numer pokoju</label>
+            <InputText id="number" class="form-control" @bind-Value="Model.Number" />
+        </div>
+
+        <div class="mb-3">
+            <label for="capacity" class="form-label">Pojemność</label>
+            <InputNumber id="capacity" class="form-control" @bind-Value="Model.Capacity" />
+        </div>
+
+        <div class="form-check mb-3">
+            <InputCheckbox id="isAvailable" class="form-check-input" @bind-Value="Model.IsAvailable" />
+            <label class="form-check-label" for="isAvailable">Dostępny</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+        <a href="/rooms" class="btn btn-secondary">Anuluj</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public long RoomId { get; set; }
+
+    private UpdateRoomCommand? Model;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var room = await Mediator.Send(new GetRoomByIdQuery(RoomId));
+        if (room != null)
+        {
+            Model = new UpdateRoomCommand
+                {
+                    Id = room.Id,
+                    Number = room.Number,
+                    Capacity = room.Capacity,
+                    IsAvailable = room.IsAvailable
+                };
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Model != null)
+        {
+            await Mediator.Send(Model);
+            NavigationManager.NavigateTo("/rooms");
+        }
+    }
+}

@@ -8,6 +8,7 @@ namespace SzkolenieTechniczne2.Hotel.Domain.Repositories
     {
         Task<List<Room>> GetAllAsync();
         Task AddAsync(Room room);
-
+        Task<Room?> GetByIdAsync(long id);
+        Task UpdateAsync(Room room);
     }
 }

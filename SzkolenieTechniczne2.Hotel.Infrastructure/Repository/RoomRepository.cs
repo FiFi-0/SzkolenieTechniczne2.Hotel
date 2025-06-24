@@ -9,6 +9,16 @@ namespace SzkolenieTechniczne2.Hotel.Infrastructure.Repository
 {
     public class RoomRepository : IRoomRepository
     {
+        public async Task<Room?> GetByIdAsync(long id)
+        {
+            return await _context.Rooms.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(Room room)
+        {
+            _context.Rooms.Update(room);
+            await _context.SaveChangesAsync();
+        }
         private readonly HotelDbContext _context;
 
         public RoomRepository(HotelDbContext context)
