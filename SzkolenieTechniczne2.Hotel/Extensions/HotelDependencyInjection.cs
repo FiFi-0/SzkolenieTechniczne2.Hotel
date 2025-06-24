@@ -1,5 +1,7 @@
 using SzkolenieTechniczne2.Hotel.Domain.Repositories;
 using SzkolenieTechniczne2.Hotel.Infrastructure.Repositories;
+using SzkolenieTechniczne2.Hotel.Infrastructure.Repository;
+
 
 namespace SzkolenieTechniczne2.Hotel.Extensions;
 
@@ -9,11 +11,12 @@ public static class HotelDependencyInjection
     {
         // Dodanie repozytoriów
         services.AddScoped<IReservationsRepository, ReservationsRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
 
         // Rejestracja MediatR - WA¯NE!
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(typeof(HotelDependencyInjection).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(IReservationsRepository).Assembly);
         });
 
         return services;

@@ -1,21 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SzkolenieTechniczne2.Hotel.Domain.Command; // <- Result jest tutaj
-using SzkolenieTechniczne2.Hotel.Domain.Command.Reservation; // <- CreateReservationCommandHandler
-using SzkolenieTechniczne2.Hotel.Domain.Repositories;
+using SzkolenieTechniczne2.Hotel.Domain.Command;
+using SzkolenieTechniczne2.Hotel.Domain.Command.Reservation;
+using SzkolenieTechniczne2.Hotel.Domain.Repositories; // Ten using jest potrzebny
 using SzkolenieTechniczne2.Hotel.Infrastructure;
-using SzkolenieTechniczne2.Hotel.Infrastructure.Repositories;
+using SzkolenieTechniczne2.Hotel.Infrastructure.Repositories; // Ten using jest potrzebny
 using System.Reflection;
+using SzkolenieTechniczne2.Hotel.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.DetailedErrors = true;
+});
 
 // Rejestracja bazy danych
 builder.Services.AddDbContext<HotelDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HotelDatabase")));
 
-// ✅ Rejestracja MediatR — rejestruje wszystkie Command/Handler/Query z odpowiednich projektów
+// Rejestracja MediatR
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(
@@ -25,16 +29,19 @@ builder.Services.AddMediatR(cfg =>
     );
 });
 
-// Rejestracja repozytorium
+// Rejestracja repozytoriów
 builder.Services.AddScoped<IReservationsRepository, ReservationsRepository>();
+// --- DODANA LINIA ---
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+
 
 var app = builder.Build();
 
-// Automatyczne utworzenie bazy danych (EnsureCreated — wersja bez migracji)
+// Automatyczne utworzenie bazy danych
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<HotelDbContext>();
-    db.Database.EnsureCreated(); // lub .Migrate() jeśli używasz migracji
+    db.Database.Migrate(); // Używamy migracji!
 }
 
 if (!app.Environment.IsDevelopment())

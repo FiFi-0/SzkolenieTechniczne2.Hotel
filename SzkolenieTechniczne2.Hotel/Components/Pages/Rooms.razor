@@ -1,0 +1,52 @@
+﻿@page "/rooms"
+@using MediatR
+@using SzkolenieTechniczne2.Hotel.Domain.Entities
+@using SzkolenieTechniczne2.Hotel.Domain.Query.Room.GetAll
+@inject IMediator Mediator
+
+<h3>Pokoje</h3>
+
+<p>
+    <a href="/rooms/create" class="btn btn-success">Dodaj nowy pokój</a>
+</p>
+
+@if (pokoje == null)
+{
+        <p><em>Ładowanie...</em></p>
+}
+else
+{
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Numer</th>
+                    <th>Pojemność</th>
+                    <th>Dostępny</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var pokoj in pokoje)
+            {
+                        <tr>
+                            <td>@pokoj.Number</td>
+                            <td>@pokoj.Capacity</td>
+                            <td>@(pokoj.IsAvailable ? "Tak" : "Nie")</td>
+                            <td>
+                                <a href="@($"rooms/edit/{pokoj.Id}")" class="btn btn-sm btn-primary">Edytuj</a>
+                                <button class="btn btn-sm btn-danger">Usuń</button>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}
+
+@code {
+    private List<Room>? pokoje;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pokoje = await Mediator.Send(new GetAllRoomsQuery());
+    }
+}
